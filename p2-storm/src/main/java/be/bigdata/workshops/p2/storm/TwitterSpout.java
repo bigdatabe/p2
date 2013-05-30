@@ -27,22 +27,40 @@ import backtype.storm.topology.base.BaseRichSpout;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
+import twitter4j.Query;
+import twitter4j.QueryResult;
+import twitter4j.Status;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
 
 public class TwitterSpout extends BaseRichSpout {
 
     private SpoutOutputCollector spoutOutputCollector;
+    private Twitter twitter;
 
     public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer) {
-        outputFieldsDeclarer.declare(new Fields("author", "message"));
+        outputFieldsDeclarer.declare(new Fields("screenName", "message"));
     }
 
     public void open(Map map, TopologyContext topologyContext, SpoutOutputCollector spoutOutputCollector) {
         this.spoutOutputCollector = spoutOutputCollector;
+        twitter = TwitterFactory.getSingleton();
     }
 
     public void nextTuple() {
-        spoutOutputCollector.emit(new Values("Bart", "don't have a cow man"));
+//        spoutOutputCollector.emit(new Values("Bart", "don't have a cow man"));
 //        spoutOutputCollector.emit(new Values("Homer", "doh"));
+        Query query = new Query("source:twitter4j simpsons");
+        QueryResult result = null;
+        try {
+            result = twitter.search(query);
+        } catch (TwitterException e) {
+            throw new IllegalStateException("Twitter is broken", e);
+        }
+        for (Status status : result.getTweets()) {
+            spoutOutputCollector.emit(new Values(status.getUser().getScreenName(), status.getText()));
+        }
     }
 
 }
