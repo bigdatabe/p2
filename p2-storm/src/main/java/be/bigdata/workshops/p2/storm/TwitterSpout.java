@@ -16,6 +16,7 @@
 
 package be.bigdata.workshops.p2.storm;
 
+import java.util.List;
 import java.util.Map;
 
 import backtype.storm.spout.SpoutOutputCollector;
@@ -51,14 +52,17 @@ public class TwitterSpout extends BaseRichSpout {
     public void nextTuple() {
 //        spoutOutputCollector.emit(new Values("Bart", "don't have a cow man"));
 //        spoutOutputCollector.emit(new Values("Homer", "doh"));
-        Query query = new Query("source:twitter4j simpsons");
+        Query query = new Query("source:twitter4j gas");
         QueryResult result = null;
         try {
             result = twitter.search(query);
         } catch (TwitterException e) {
             throw new IllegalStateException("Twitter is broken", e);
         }
-        for (Status status : result.getTweets()) {
+        List<Status> tweets = result.getTweets();
+        System.out.println("tweet size " + tweets.size());
+        for (Status status : tweets) {
+            System.out.println("tweet " + status);
             spoutOutputCollector.emit(new Values(status.getUser().getScreenName(), status.getText()));
         }
     }
