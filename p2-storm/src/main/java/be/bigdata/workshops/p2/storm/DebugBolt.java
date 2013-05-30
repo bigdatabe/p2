@@ -31,7 +31,7 @@ public class DebugBolt extends BaseRichBolt {
     @Override
     public void execute(final Tuple input) {
         for (final String field : input.getFields()) {
-            LOGGER.info(String.format("%s = '%s'", field, input.getStringByField(field)));
+            LOGGER.info(String.format("%s = '%s'", field, input.getDoubleByField(field)));
         }
     }
 

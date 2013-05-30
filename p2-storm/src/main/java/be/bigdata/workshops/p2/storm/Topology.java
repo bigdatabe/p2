@@ -10,7 +10,7 @@ public class Topology {
     public static void main(final String[] args) {
         final TopologyBuilder builder = new TopologyBuilder();
         builder.setSpout("in", new TwitterSpout(), 10);
-        builder.setBolt("debug", new DebugBolt(), 3);
+        builder.setBolt("debug", new DebugBolt(), 3).shuffleGrouping("in");
 
         final Config conf = new Config();
         conf.setDebug(true);
