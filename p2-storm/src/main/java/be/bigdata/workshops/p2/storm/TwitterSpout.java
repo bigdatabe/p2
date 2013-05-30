@@ -28,6 +28,7 @@ import backtype.storm.topology.base.BaseRichSpout;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
+import backtype.storm.utils.Utils;
 import twitter4j.Query;
 import twitter4j.QueryResult;
 import twitter4j.Status;
@@ -52,7 +53,7 @@ public class TwitterSpout extends BaseRichSpout {
     public void nextTuple() {
 //        spoutOutputCollector.emit(new Values("Bart", "don't have a cow man"));
 //        spoutOutputCollector.emit(new Values("Homer", "doh"));
-        Query query = new Query("source:twitter4j gas");
+        Query query = new Query("gas");
         QueryResult result = null;
         try {
             result = twitter.search(query);
@@ -65,6 +66,7 @@ public class TwitterSpout extends BaseRichSpout {
             System.out.println("tweet " + status);
             spoutOutputCollector.emit(new Values(status.getUser().getScreenName(), status.getText()));
         }
+        Utils.sleep(500);
     }
 
 }
