@@ -11,15 +11,19 @@ public class Topology {
 
     public static void main(String[] args) {
         System.out.println("Team 3");
-        TopologyBuilder builder = new TopologyBuilder();
-        builder.setSpout("nonsenseBolt", new TestWordSpout());
-        builder.setBolt("systemOutBolt", new SystemOutBolt()).shuffleGrouping("nonsenseBolt");
-        StormTopology topology = builder.createTopology();
+        StormTopology topology = buildTopology();
         LocalCluster cluster = new LocalCluster();
         cluster.submitTopology("team3Tolopogy", new Config(), topology);
         Utils.sleep(20);
         cluster.killTopology("team3Tolopogy");
         cluster.shutdown();
+    }
+
+    private static StormTopology buildTopology() {
+        TopologyBuilder builder = new TopologyBuilder();
+        builder.setSpout("nonsenseBolt", new TestWordSpout());
+        builder.setBolt("systemOutBolt", new SystemOutBolt()).shuffleGrouping("nonsenseBolt");
+        return builder.createTopology();
     }
 
 }
