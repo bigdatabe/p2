@@ -17,10 +17,9 @@ public class Topology {
         StormTopology topology = builder.createTopology();
         LocalCluster cluster = new LocalCluster();
         cluster.submitTopology("team3Tolopogy", new Config(), topology);
-        Utils.sleep(10000);
-        cluster.killTopology("test");
+        Utils.sleep(20);
+        cluster.killTopology("team3Tolopogy");
         cluster.shutdown();
-
     }
 
 }
