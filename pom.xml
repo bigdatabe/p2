@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>be.bigdata.workshops</groupId>
+    <artifactId>workshops-p2</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>p2-storm</module>
+    </modules>
+    <name>P2</name>
+    <description>
+        This project is the red line of the second BigData.be project.
+    </description>
+
+    <organization>
+        <name>BigData.be</name>
+        <url>http://www.bigdata.be</url>
+    </organization>
+
+    <developers>
+        <developer>
+            <name>Kenny Helsen</name>
+            <email>kennyhelsens@gmail.com</email>
+            <organization>ThinkData</organization>
+        </developer>
+        <developer>
+            <name>Daan Gerits</name>
+            <email>daan.gerits@dasos.be</email>
+            <organization>Dasos</organization>
+            <organizationUrl>http://www.dasos.be</organizationUrl>
+        </developer>
+    </developers>
+
+    <repositories>
+        <repository>
+            <id>clojars.org</id>
+            <url>http://clojars.org/repo</url>
+        </repository>
+    </repositories>
+
+    <properties>
+        <version.storm>0.8.2</version.storm>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>storm</groupId>
+                <artifactId>storm</artifactId>
+                <version>${version.storm}</version>
+            </dependency>
+            <dependency>
+                <groupId>storm</groupId>
+                <artifactId>storm-lib</artifactId>
+                <version>${version.storm}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>
