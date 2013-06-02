@@ -69,6 +69,13 @@ public class ApiStreamingSpout extends BaseRichSpout{
 					}
 				}
 			}
+            else {
+              LOG.warn("Did not receive 200 OK from Twitter. Perhaps we are rate limited? Reason: " + status.getReasonPhrase());
+              try {
+				Thread.sleep(10000);
+              } catch (InterruptedException e1) {
+              }
+            }
 		} catch (IOException e) {
 			LOG.error("Error in communication with twitter api ["+get.getURI().toString()+"]");
 			try {
@@ -110,7 +117,7 @@ public class ApiStreamingSpout extends BaseRichSpout{
 
 	@Override
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
-		declarer.declare(new Fields("criteria","tweet"));
+		declarer.declare(new Fields("track","tweet"));
 	}
 
 }
