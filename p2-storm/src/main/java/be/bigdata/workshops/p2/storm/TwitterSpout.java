@@ -53,7 +53,7 @@ public class TwitterSpout extends BaseRichSpout {
     public void nextTuple() {
 //        spoutOutputCollector.emit(new Values("Bart", "don't have a cow man"));
 //        spoutOutputCollector.emit(new Values("Homer", "doh"));
-        Query query = new Query("gas");
+        Query query = new Query("PRISM");
         QueryResult result = null;
         try {
             result = twitter.search(query);
