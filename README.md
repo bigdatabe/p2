@@ -18,6 +18,10 @@ Workshops
 * Define business logic for positive/negative market movements
 
 
+Documents
+---------
+[Workshop overview document](https://docs.google.com/document/d/1bBHLUgKTM8wxJP2eR3Yy2oWTvOUuqg-XYojatkz015M/edit?usp=sharing)
+
 Presentations
 --------------
 [2013-05-02 bigdatabe 14th meetup](http://kennyhelsens.github.io/khelsenspages/bigdatabe_20130502/)
