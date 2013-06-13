@@ -1,9 +1,9 @@
 Exec { path => [ "/usr/local/bin/", "/usr/local/sbin", "/bin/", "/sbin/" , "/usr/bin/", "/usr/sbin/" ] }
 
-// -- JDK
+# -- JDK
 class { 'jdk': }
 
-// -- Storm Worker
+# -- Storm Worker
 class { 'storm::config':
     nimbus_host         => 'master.p2.bigdata.be',
     zookeeper_servers   => ['master.p2.bigdata.be' ],

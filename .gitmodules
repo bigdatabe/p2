@@ -1,15 +1,9 @@
-[submodule "vagrant/master/modules/storm"]
-	path = vagrant/master/modules/storm
+[submodule "vagrant/modules/storm"]
+	path = vagrant/modules/storm
 	url = https://github.com/nathan-gs/puppet-storm.git
-[submodule "vagrant/slave/modules/storm"]
-	path = vagrant/slave/modules/storm
-	url = https://github.com/nathan-gs/puppet-storm.git
-[submodule "vagrant/master/modules/cdh4"]
-	path = vagrant/master/modules/cdh4
+[submodule "vagrant/modules/cdh4"]
+	path = vagrant/modules/cdh4
 	url = https://github.com/nathan-gs/puppet-cdh4.git
-[submodule "vagrant/master/modules/jdk"]
-	path = vagrant/master/modules/jdk
-	url = https://github.com/narkisr/puppet-jdk.git
-[submodule "vagrant/slave/modules/jdk"]
-	path = vagrant/slave/modules/jdk
+[submodule "vagrant/modules/jdk"]
+	path = vagrant/modules/jdk
 	url = https://github.com/narkisr/puppet-jdk.git

@@ -1,9 +1,9 @@
 Exec { path => [ "/usr/local/bin/", "/usr/local/sbin", "/bin/", "/sbin/" , "/usr/bin/", "/usr/sbin/" ] }
 
-// -- JDK
+# -- JDK
 class { 'jdk': }
 
-// -- Storm Nimbus
+# -- Storm Nimbus
 class { 'storm::config':
     nimbus_host         => 'master.p2.bigdata.be',
     zookeeper_servers   => ['master.p2.bigdata.be' ],
@@ -15,7 +15,7 @@ class { 'storm::nimbus': }
 class { 'storm::ui': }
 
 
-// -- Zookeeper
+# -- Zookeeper
 $zookeeper_hosts = {
     "master.p2.bigdata.be" => 1,
 }
