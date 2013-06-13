@@ -1,6 +1,3 @@
-.idea/
+.idea
 *.iml
-*/.vagrant/*
-
-vagrant/master/.vagrant/*
-vagrant/slave/.vagrant/*
+p2-storm/target
