@@ -1,7 +1,13 @@
 Exec { path => [ "/usr/local/bin/", "/usr/local/sbin", "/bin/", "/sbin/" , "/usr/bin/", "/usr/sbin/" ] }
 
+stage { 'first':
+  before => Stage['main'],
+}
+
 # -- JDK
-class { 'jdk': }
+class { 'jdk':
+    stage   => 'first'
+}
 
 # -- Storm Nimbus
 class { 'storm::config':
@@ -20,9 +26,12 @@ $zookeeper_hosts = {
     "master.p2.bigdata.be" => 1,
 }
 
+class { 'cdh4::rpm_source' :
+    stage   => first
+}
 class { 'cdh4::zookeeper' : }
 class { "cdh4::zookeeper::config":
     zookeeper_hosts => $zookeeper_hosts,
 }
-include cdh4::zookeeper::server
-include cdh4::zookeeper::log_cleanup
+class { 'cdh4::zookeeper::server' : }
+class { 'cdh4::zookeeper::log_cleanup' : }

@@ -1,7 +1,13 @@
 Exec { path => [ "/usr/local/bin/", "/usr/local/sbin", "/bin/", "/sbin/" , "/usr/bin/", "/usr/sbin/" ] }
 
+stage { 'first':
+  before => Stage['main'],
+}
+
 # -- JDK
-class { 'jdk': }
+class { 'jdk':
+    stage   => 'first'
+}
 
 # -- Storm Worker
 class { 'storm::config':
