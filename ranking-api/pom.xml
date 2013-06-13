@@ -12,5 +12,34 @@
     <groupId>be.bigdata.workshops</groupId>
     <artifactId>ranking-api</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>storm</groupId>
+            <artifactId>storm-lib</artifactId>
+            <version>${version.storm}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>13.0.1</version>
+        </dependency>
+        <dependency>
+          <groupId>commons-collections</groupId>
+          <artifactId>commons-collections</artifactId>
+          <version>3.2.1</version>
+        </dependency>
+    </dependencies>
 
+    <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <source>1.5</source>
+              <target>1.5</target>
+            </configuration>
+          </plugin>
+       </plugins>
+    </build>
 </project>
