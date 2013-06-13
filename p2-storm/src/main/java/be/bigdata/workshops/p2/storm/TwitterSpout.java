@@ -35,6 +35,7 @@ import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
+import twitter4j.conf.ConfigurationBuilder;
 
 public class TwitterSpout extends BaseRichSpout {
 
@@ -47,13 +48,19 @@ public class TwitterSpout extends BaseRichSpout {
 
     public void open(Map map, TopologyContext topologyContext, SpoutOutputCollector spoutOutputCollector) {
         this.spoutOutputCollector = spoutOutputCollector;
-        twitter = TwitterFactory.getSingleton();
+        //twitter = TwitterFactory.getSingleton();
+        ConfigurationBuilder cb = new ConfigurationBuilder();
+        cb.setDebugEnabled(true)
+                .setOAuthConsumerKey("KTTdtBn4UoTPAP4sSaKBw")
+                .setOAuthConsumerSecret("xK0qK1N1P080oxTSDJd1Ikt5L0t51TpWLnObyRgnPY")
+                .setOAuthAccessToken("1470611821-r7R12S4A0688sufvsyDyOyKUWciZ1C26QOxQrm2")
+                .setOAuthAccessTokenSecret("OCUdnum7UqaF0EbNJ2V5dUsQupHFUxQyIlxl70FR89k");
+        TwitterFactory tf = new TwitterFactory(cb.build());
+        twitter = tf.getInstance();
     }
 
     public void nextTuple() {
-//        spoutOutputCollector.emit(new Values("Bart", "don't have a cow man"));
-//        spoutOutputCollector.emit(new Values("Homer", "doh"));
-        Query query = new Query("gas");
+        Query query = new Query("redhatsummit");
         QueryResult result = null;
         try {
             result = twitter.search(query);
@@ -61,9 +68,7 @@ public class TwitterSpout extends BaseRichSpout {
             throw new IllegalStateException("Twitter is broken", e);
         }
         List<Status> tweets = result.getTweets();
-        System.out.println("tweet size " + tweets.size());
         for (Status status : tweets) {
-            System.out.println("tweet " + status);
             spoutOutputCollector.emit(new Values(status.getUser().getScreenName(), status.getText()));
         }
         Utils.sleep(500);

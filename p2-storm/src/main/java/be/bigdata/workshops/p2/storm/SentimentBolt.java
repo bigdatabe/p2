@@ -1,19 +1,3 @@
-/*
- * Copyright 2013 JBoss Inc
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package be.bigdata.workshops.p2.storm;
 
 import backtype.storm.topology.BasicOutputCollector;
@@ -22,24 +6,29 @@ import backtype.storm.topology.base.BaseBasicBolt;
 import backtype.storm.tuple.Tuple;
 import com.likethecolor.alchemy.api.Client;
 import com.likethecolor.alchemy.api.call.AbstractCall;
-import com.likethecolor.alchemy.api.call.AuthorCall;
-import com.likethecolor.alchemy.api.call.RawTextCall;
 import com.likethecolor.alchemy.api.call.SentimentCall;
 import com.likethecolor.alchemy.api.call.type.CallTypeText;
-import com.likethecolor.alchemy.api.call.type.CallTypeUrl;
 import com.likethecolor.alchemy.api.entity.Response;
 import com.likethecolor.alchemy.api.entity.SentimentAlchemyEntity;
 
 import java.io.IOException;
 import java.util.Iterator;
 
-public class SystemOutBolt extends BaseBasicBolt {
+/**
+ * Created with IntelliJ IDEA.
+ * User: cvhuele
+ * Date: 10/06/13
+ * Time: 17:14
+ * To change this template use File | Settings | File Templates.
+ */
+public class SentimentBolt extends BaseBasicBolt {
 
     public void execute(Tuple tuple, BasicOutputCollector basicOutputCollector) {
         final Client client;
         try {
             client = new Client("/alchemy_key.txt");
-            final AbstractCall call =  new SentimentCall(new CallTypeText(tuple.getValue(1).toString()));
+            String sentiment = tuple.getValue(1).toString();
+            final AbstractCall call =  new SentimentCall(new CallTypeText(sentiment));
             final Response response = client.call(call);
             SentimentAlchemyEntity entity;
             final Iterator<SentimentAlchemyEntity> iter = response.iterator();
@@ -49,6 +38,10 @@ public class SystemOutBolt extends BaseBasicBolt {
             }
 
         } catch (IOException e) {
+            System.out.println("Error in call?" +tuple.getValue(1).toString() );
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (NullPointerException e) {
+            System.out.println("Error in call?" +tuple.getValue(1).toString() );
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
