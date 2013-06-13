@@ -27,6 +27,7 @@ import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.topology.base.BaseRichSpout;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Values;
+import backtype.storm.utils.Utils;
 
 public class ApiStreamingSpoutStub extends BaseRichSpout {
 
@@ -67,6 +68,7 @@ public class ApiStreamingSpoutStub extends BaseRichSpout {
 	public void nextTuple() {
 		try {
 			// TODO Auto-generated catch block
+			Utils.sleep(10);
 			String line = bufferReader.readLine();
 			if (line != null)
 				return;
@@ -85,5 +87,15 @@ public class ApiStreamingSpoutStub extends BaseRichSpout {
 
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
 		declarer.declare(new Fields("tweet"));
+	}
+	
+	@Override
+	public void close() {
+		try {
+			bufferReader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		super.close();
 	}
 }
