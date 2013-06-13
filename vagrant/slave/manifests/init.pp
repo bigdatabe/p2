@@ -11,8 +11,8 @@ class { 'jdk':
 
 # -- Storm Worker
 class { 'storm::config':
-    nimbus_host         => 'master.p2.bigdata.be',
-    zookeeper_servers   => ['master.p2.bigdata.be' ],
+    nimbus_host         => '192.168.123.1',
+    zookeeper_servers   => ['192.168.123.1' ],
     supervisor_slots    => [ 6700, 6701, 6702 ],
     ui_port             => 9088,
 }
