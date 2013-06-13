@@ -4,6 +4,9 @@ import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import net.sourceforge.argparse4j.inf.Namespace;
+
+import org.apache.log4j.Logger;
+
 import backtype.storm.Config;
 import backtype.storm.LocalCluster;
 import backtype.storm.generated.StormTopology;
@@ -20,13 +23,15 @@ import backtype.storm.utils.Utils;
  */
 public class Topology {
 
+    static Logger LOG = Logger.getLogger(ApiStreamingSpout.class);
+
     public static void main(final String[] args) throws InterruptedException {
         final ArgumentParser parser =
             ArgumentParsers.newArgumentParser("stocks").defaultHelp(true).description("realtime twitter stock monitor.");
-        parser.addArgument("-a", "--accessToken");
-        parser.addArgument("-s", "--accessTokenSecret");
-        parser.addArgument("-c", "--consumerKey");
-        parser.addArgument("-e", "--consumerSecret");
+        parser.addArgument("-a", "--accessToken").required(true);
+        parser.addArgument("-s", "--accessTokenSecret").required(true);
+        parser.addArgument("-c", "--consumerKey").required(true);
+        parser.addArgument("-e", "--consumerSecret").required(true);
 
         try {
             final Namespace namespace = parser.parseArgs(args);
@@ -34,6 +39,11 @@ public class Topology {
             final String accessTokenSecret = namespace.getString("accessTokenSecret");
             final String consumerKey = namespace.getString("consumerKey");
             final String consumerSecret = namespace.getString("consumerSecret");
+
+            LOG.info("accesstoken: " + accessToken);
+            LOG.info("accesstokensecret: " + accessTokenSecret);
+            LOG.info("consumerkey: " + consumerKey);
+            LOG.info("consumersecret: " + consumerSecret);
 
             // We can switch between realtime/stubbed spout here.
             final IRichSpout twitterSpout =
