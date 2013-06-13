@@ -11,7 +11,7 @@
 
     <groupId>be.bigdata.workshops</groupId>
     <artifactId>topology</artifactId>
-    <name>P2 :: storm :: topology</name>
+    <name>P2 :: Storm :: Topology</name>
 
 
     <build>
@@ -46,6 +46,11 @@
         <dependency>
             <groupId>storm</groupId>
             <artifactId>storm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.twitter4j</groupId>
+            <artifactId>twitter4j-core</artifactId>
+            <version>[3.0,)</version>
         </dependency>
         <dependency>
             <groupId>args4j</groupId>
