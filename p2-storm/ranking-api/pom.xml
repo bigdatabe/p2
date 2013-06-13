@@ -11,6 +11,7 @@
 
     <groupId>be.bigdata.workshops</groupId>
     <artifactId>ranking-api</artifactId>
+    <name>P2 :: Storm :: Ranking API</name>
 
 
 </project>
