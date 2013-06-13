@@ -21,7 +21,7 @@ public class Topology {
     private static StormTopology buildTopology() {
         TopologyBuilder builder = new TopologyBuilder();
         builder.setSpout("twitterSpout", new TwitterSpout());
-        builder.setBolt("systemOutBolt", new SystemOutBolt()).shuffleGrouping("twitterSpout");
+        builder.setBolt("sentimentBolt", new SentimentBolt()).shuffleGrouping("twitterSpout");
         return builder.createTopology();
     }
 

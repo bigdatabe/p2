@@ -50,5 +50,15 @@
             <groupId>org.twitter4j</groupId>
             <artifactId>twitter4j-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.opennlp</groupId>
+            <artifactId>opennlp-tools</artifactId>
+            <version>1.5.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.likethecolor</groupId>
+            <artifactId>alchemy</artifactId>
+            <version>1.0.2</version>
+        </dependency>
     </dependencies>
 </project>
