@@ -1,6 +1,8 @@
 package be.bigdata.workshops.p2.storm;
 
 import backtype.storm.Config;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import twitter4j.conf.ConfigurationBuilder;
 import twitter4j.TwitterStream;
 import twitter4j.TwitterStreamFactory;
@@ -19,19 +21,21 @@ import twitter4j.StallWarning;
 import twitter4j.Status;
 import twitter4j.StatusDeletionNotice;
 import twitter4j.StatusListener;
+import twitter4j.json.DataObjectFactory;
 
 public class TwitterOAuthSpout extends BaseRichSpout {
     /**
      *
      */
     private static final long serialVersionUID = -3267948359533815988L;
+    private static final JSONParser jsonParser = new JSONParser();
     private final String accessToken;
     private final String accessTokenSecret;
     private final String consumerKey;
     private final String consumerSecret;
 
     SpoutOutputCollector _collector;
-    LinkedBlockingQueue<Status> queue = null;
+    LinkedBlockingQueue<Object> queue = null;
     TwitterStream _twitterStream;
 
     public TwitterOAuthSpout(String accessToken, String accessTokenSecret, String consumerKey, String consumerSecret) {
@@ -43,12 +47,20 @@ public class TwitterOAuthSpout extends BaseRichSpout {
 
     @Override
     public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
-        queue = new LinkedBlockingQueue<Status>(1000);
+        queue = new LinkedBlockingQueue<Object>(1000);
         _collector = collector;
         StatusListener listener = new StatusListener() {
             @Override
             public void onStatus(Status status) {
-                queue.offer(status);
+                // Dirty, but this is what we need to be compatible with ApiStreamingSpout
+                String rawJson = DataObjectFactory.getRawJSON(status);
+                Object json;
+                try {
+                    json = jsonParser.parse(rawJson);
+                    queue.offer(json);
+                } catch (ParseException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
             }
 
             @Override
@@ -74,6 +86,8 @@ public class TwitterOAuthSpout extends BaseRichSpout {
         };
 
         ConfigurationBuilder b = new ConfigurationBuilder();
+        // We need this to get to the JSON status
+        b.setJSONStoreEnabled(true);
         b.setOAuthAccessToken(accessToken);
         b.setOAuthAccessTokenSecret(accessTokenSecret);
         b.setOAuthConsumerKey(consumerKey);
@@ -89,11 +103,11 @@ public class TwitterOAuthSpout extends BaseRichSpout {
 
     @Override
     public void nextTuple() {
-        Status ret = queue.poll();
+        Object ret = queue.poll();
         if (ret == null) {
             Utils.sleep(50);
         } else {
-            _collector.emit(new Values(ret));
+            _collector.emit(new Values("*", ret));
         }
     }
 
@@ -119,6 +133,6 @@ public class TwitterOAuthSpout extends BaseRichSpout {
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields("tweet"));
+        declarer.declare(new Fields("track", "tweet"));
     }
 }
