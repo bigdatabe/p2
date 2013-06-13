@@ -10,8 +10,6 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>p2-storm</module>
-        <module>ranking-api</module>
-        <module>topology</module>
     </modules>
     <name>P2</name>
     <description>
