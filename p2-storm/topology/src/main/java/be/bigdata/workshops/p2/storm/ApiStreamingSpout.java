@@ -25,7 +25,7 @@ import backtype.storm.topology.base.BaseRichSpout;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Values;
 
-public class ApiStreamingSpout extends BaseRichSpout{
+public class ApiStreamingSpout extends BaseRichSpout {
 
 	static String STREAMING_API_URL="https://stream.twitter.com/1/statuses/filter.json?track=";
 	private String track;
@@ -117,7 +117,7 @@ public class ApiStreamingSpout extends BaseRichSpout{
 
 	@Override
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
-		declarer.declare(new Fields("track","tweet"));
+		declarer.declare(new Fields("tweet"));
 	}
 
 }
