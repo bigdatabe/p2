@@ -1,0 +1,6 @@
+.idea/
+*.iml
+*/.vagrant/*
+
+vagrant/master/.vagrant/*
+vagrant/slave/.vagrant/*

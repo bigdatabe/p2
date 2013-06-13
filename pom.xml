@@ -33,6 +33,12 @@
             <organization>Dasos</organization>
             <organizationUrl>http://www.dasos.be</organizationUrl>
         </developer>
+        <developer>
+            <name>Nathan Bijnens</name>
+            <email>nathan@nathan.gs</email>
+            <organization>DataCrunchers</organization>
+            <organizationUrl>http://www.datacrunchers.eu</organizationUrl>
+        </developer>
     </developers>
 
     <repositories>
