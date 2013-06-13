@@ -46,9 +46,9 @@
 			<artifactId>storm</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>args4j</groupId>
-			<artifactId>args4j</artifactId>
-			<version>2.0.23</version>
+			<groupId>net.sourceforge.argparse4j</groupId>
+			<artifactId>argparse4j</artifactId>
+			<version>0.4.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.guava</groupId>
