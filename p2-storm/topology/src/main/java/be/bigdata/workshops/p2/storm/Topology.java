@@ -1,9 +1,12 @@
 package be.bigdata.workshops.p2.storm;
 
+import be.bigdata.workshops.p2.storm.topology.strategy.PlainTopologyStrategy;
 import be.bigdata.workshops.p2.storm.factories.BasicAuthSpoutFactory;
 import be.bigdata.workshops.p2.storm.factories.OAuthSpoutFactory;
 import be.bigdata.workshops.p2.storm.factories.SpoutFactory;
 import be.bigdata.workshops.p2.storm.factories.StubSpoutFactory;
+import be.bigdata.workshops.p2.storm.topology.strategy.DebugTopologyStrategy;
+import be.bigdata.workshops.p2.storm.topology.strategy.TopologyStrategy;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.*;
@@ -14,7 +17,6 @@ import backtype.storm.Config;
 import backtype.storm.LocalCluster;
 import backtype.storm.generated.StormTopology;
 import backtype.storm.topology.IRichSpout;
-import backtype.storm.topology.TopologyBuilder;
 import backtype.storm.utils.Utils;
 
 /**
@@ -48,6 +50,8 @@ public class Topology {
         final Subparser oauthParser = realTimeSubparsers.addParser("oauth").setDefault(FACTORY, OAUTH_SPOUT_FACTORY);
         final Subparser basicParser = realTimeSubparsers.addParser("basic").setDefault(FACTORY, BASIC_AUTH_SPOUT_FACTORY);
 
+        parser.addArgument("-d", "--debug").help("Enable the debug bolt").action(Arguments.storeTrue()).setDefault(false);
+
         oauthParser.addArgument("-a", "--accessToken").required(true);
         oauthParser.addArgument("-s", "--accessTokenSecret").required(true);
         oauthParser.addArgument("-c", "--consumerKey").required(true);
@@ -64,12 +68,23 @@ public class Topology {
 
         try {
             final Namespace namespace = parser.parseArgs(args);
+            final Boolean debug = namespace.getBoolean("debug");
             final Config conf = new Config();
 
             final SpoutFactory spoutFactory = (SpoutFactory) namespace.get(FACTORY);
             final IRichSpout twitterSpout = spoutFactory.create(namespace, conf);
-            final StormTopology topology = createTopology(twitterSpout);
 
+            final TopologyStrategy topologyStrategy;
+
+            if (debug) {
+                topologyStrategy = new DebugTopologyStrategy();
+            } else {
+                topologyStrategy = new PlainTopologyStrategy();
+            }
+
+            final StormTopology topology = topologyStrategy.build(twitterSpout);
+
+            // TODO: make configurable
             conf.put("sentiment_file", "sentiment_scores.txt");
             executeTopology(topology, conf);
         } catch (final ArgumentParserException e) {
@@ -93,20 +108,5 @@ public class Topology {
         Utils.sleep(30000);
         cluster.killTopology("twitter-test");
         cluster.shutdown();
-    }
-
-    /**
-     * Create the actual {@link StormTopology}.
-     * 
-     * @param twitterSpout a {@link IRichSpout} compatible with the twitter api output interface (can be realtime or stub
-     *            instance).
-     * @return the {@link StormTopology}.
-     */
-    /* package */static StormTopology createTopology(final IRichSpout twitterSpout) {
-        final TopologyBuilder builder = new TopologyBuilder();
-        builder.setSpout("tweets-collector", twitterSpout, 1);
-        // builder.setBolt("hashtag-sumarizer", new TwitterSumarizeHashtags()).shuffleGrouping("tweets-collector");
-        builder.setBolt("sentiment-analyzer", new SentimentBolt()).shuffleGrouping("tweets-collector");
-        return builder.createTopology();
     }
 }
