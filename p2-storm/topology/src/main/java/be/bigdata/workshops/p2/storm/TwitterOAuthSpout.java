@@ -29,21 +29,9 @@ public class TwitterOAuthSpout extends BaseRichSpout {
      */
     private static final long serialVersionUID = -3267948359533815988L;
     private static final JSONParser jsonParser = new JSONParser();
-    private final String accessToken;
-    private final String accessTokenSecret;
-    private final String consumerKey;
-    private final String consumerSecret;
-
     SpoutOutputCollector _collector;
     LinkedBlockingQueue<Object> queue = null;
     TwitterStream _twitterStream;
-
-    public TwitterOAuthSpout(String accessToken, String accessTokenSecret, String consumerKey, String consumerSecret) {
-        this.accessToken = accessToken;
-        this.accessTokenSecret = accessTokenSecret;
-        this.consumerKey = consumerKey;
-        this.consumerSecret = consumerSecret;
-    }
 
     @Override
     public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
@@ -86,6 +74,11 @@ public class TwitterOAuthSpout extends BaseRichSpout {
         };
 
         ConfigurationBuilder b = new ConfigurationBuilder();
+        final String accessToken = (String) conf.get("accessToken");
+        final String accessTokenSecret = (String) conf.get("accessTokenSecret");
+        final String consumerKey = (String) conf.get("consumerKey");
+        final String consumerSecret = (String) conf.get("consumerSecret");
+
         // We need this to get to the JSON status
         b.setJSONStoreEnabled(true);
         b.setOAuthAccessToken(accessToken);

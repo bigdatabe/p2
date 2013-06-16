@@ -5,6 +5,7 @@ import be.bigdata.workshops.p2.storm.factories.OAuthSpoutFactory;
 import be.bigdata.workshops.p2.storm.factories.SpoutFactory;
 import be.bigdata.workshops.p2.storm.factories.StubSpoutFactory;
 import net.sourceforge.argparse4j.ArgumentParsers;
+import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.*;
 
 import org.apache.log4j.Logger;
@@ -39,11 +40,13 @@ public class Topology {
     public static void main(final String[] args) throws InterruptedException {
         final ArgumentParser parser =
             ArgumentParsers.newArgumentParser("stocks").defaultHelp(true).description("real-time twitter stock monitor.");
-        final Subparser realtimeParser = parser.addSubparsers().addParser("realtime");
+        Subparsers subparsers = parser.addSubparsers();
+        final Subparser realTimeParser = subparsers.addParser("realtime");
 
-        final Subparser stubParser = parser.addSubparsers().addParser("stub").setDefault(FACTORY, STUB_SPOUT_FACTORY);
-        final Subparser oauthParser = realtimeParser.addSubparsers().addParser("oauth").setDefault(FACTORY, OAUTH_SPOUT_FACTORY);
-        final Subparser basicParser = realtimeParser.addSubparsers().addParser("basic").setDefault(FACTORY, BASIC_AUTH_SPOUT_FACTORY);
+        final Subparser stubParser = subparsers.addParser("stub").setDefault(FACTORY, STUB_SPOUT_FACTORY);
+        Subparsers realTimeSubparsers = realTimeParser.addSubparsers();
+        final Subparser oauthParser = realTimeSubparsers.addParser("oauth").setDefault(FACTORY, OAUTH_SPOUT_FACTORY);
+        final Subparser basicParser = realTimeSubparsers.addParser("basic").setDefault(FACTORY, BASIC_AUTH_SPOUT_FACTORY);
 
         oauthParser.addArgument("-a", "--accessToken").required(true);
         oauthParser.addArgument("-s", "--accessTokenSecret").required(true);
@@ -54,14 +57,21 @@ public class Topology {
         basicParser.addArgument("-u", "--username").required(true);
         basicParser.addArgument("-p", "--password").required(true);
 
-        stubParser.addArgument("-f", "--file").required(true);
+        stubParser.addArgument("-f", "--file")
+                .required(true)
+                .type(Arguments.fileType().acceptSystemIn().verifyCanRead())
+                .setDefault("-");
 
         try {
             final Namespace namespace = parser.parseArgs(args);
+            final Config conf = new Config();
+
             final SpoutFactory spoutFactory = (SpoutFactory) namespace.get(FACTORY);
-            final IRichSpout twitterSpout = spoutFactory.create(namespace);
+            final IRichSpout twitterSpout = spoutFactory.create(namespace, conf);
             final StormTopology topology = createTopology(twitterSpout);
-            executeTopology(topology);
+
+            conf.put("sentiment_file", "sentiment_scores.txt");
+            executeTopology(topology, conf);
         } catch (final ArgumentParserException e) {
             parser.handleError(e);
             System.exit(1);
@@ -75,19 +85,8 @@ public class Topology {
      * 
      * @param topology to run.
      */
-    /* package */static void executeTopology(final StormTopology topology) {
+    /* package */static void executeTopology(final StormTopology topology, final Config conf) {
         final LocalCluster cluster = new LocalCluster();
-        final Config conf = new Config();
-        // conf.put("track", args[0]);
-        // conf.put("user", args[1]);
-        // conf.put("password", args[2]);
-
-        conf.put("track", "#FAKE10factsaboutme"); // Dummy keyword that is currently trending
-        conf.put("user", "bebigdatabetwit");
-        conf.put("password", "donderdag10");
-
-        conf.put("sentiment_file", "sentiment_scores.txt");
-
         cluster.submitTopology("twitter-test", conf, topology);
 
         // Sleep XX seconds, then kill this clusters - closing the connections etc...

@@ -1,5 +1,6 @@
 package be.bigdata.workshops.p2.storm.factories;
 
+import backtype.storm.Config;
 import backtype.storm.topology.IRichSpout;
 import net.sourceforge.argparse4j.inf.Namespace;
 
@@ -11,5 +12,5 @@ import net.sourceforge.argparse4j.inf.Namespace;
  * To change this template use File | Settings | File Templates.
  */
 public interface SpoutFactory {
-    public IRichSpout create(Namespace namespace);
+    public IRichSpout create(Namespace namespace, Config conf);
 }
