@@ -771,6 +771,7 @@ doubting	-1
 doubts	-1
 douche	-3
 douchebag	-3
+down	-3
 downcast	-2
 downhearted	-2
 downside	-2

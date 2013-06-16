@@ -12,8 +12,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.StringTokenizer;
+
 import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
+
+import com.google.common.base.Splitter;
 
 /**
  * Bolt that processes incoming tweets, performs some basic sentiment analysis 
@@ -24,6 +28,13 @@ import org.json.simple.JSONObject;
  * @author Olivier Van Laere <oliviervanlaere@gmail.com>
  */
 public class SentimentBolt extends BaseBasicBolt{
+
+	/**
+	 * Key in the Storm configuration for the sentiment file filename.
+	 */
+	public static final String SENTIMENT_FILE = "sentiment_file";
+
+	private static final long serialVersionUID = -9213384477488358455L;
 
   /**
    * Constant for the positive sentiment
@@ -68,19 +79,7 @@ public class SentimentBolt extends BaseBasicBolt{
       // Fetch the tweet text
       String tweetText = (String)json.get("text");
       // Convert it to lowercase - the sentiment words are all lowercase
-      String textLower = tweetText.toLowerCase();
-        // Init the tweet score
-        int score = 0;
-        // Split the text by spaces
-        String [] pieces = textLower.split(" ");
-        // For each of the words
-        for (String word : pieces) {
-          // If the word is in the sentiment map
-          if (sentiment_scores.containsKey(word)) {
-            // Increment the score by the score from the map for this word
-            score += sentiment_scores.get(word);
-          }
-        }
+      int score = scoreSentiment(tweetText.toLowerCase());
         // Init the actual sentiment for this tweet
         String sentiment = SENTIMENT_NEUTRAL;
         if (score > 0)
@@ -97,13 +96,28 @@ public class SentimentBolt extends BaseBasicBolt{
     }
   }
 
+  /* package */ int scoreSentiment(String text) {
+      // Init the tweet score
+      int score = 0;
+      // For each of the words
+      for (String word : Splitter.on(' ').split(text)) {
+        // If the word is in the sentiment map
+        if (sentiment_scores.containsKey(word)) {
+          // Increment the score by the score from the map for this word
+          score += sentiment_scores.get(word);
+        }
+      }
+      
+      return score;
+  }
+  
   /**
    * Bolt preparation.
    */
   @Override
   public void prepare(Map stormConf, TopologyContext context) {
     // Fetch the URI for the sentiment file
-    String sentimentFile = ((String) stormConf.get("sentiment_file"));
+    String sentimentFile = ((String) stormConf.get(SENTIMENT_FILE));
     // Normally this should go via classloading/jarloading/resources?
     
     // Init the reader
