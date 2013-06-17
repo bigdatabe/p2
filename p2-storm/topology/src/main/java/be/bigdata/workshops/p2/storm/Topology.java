@@ -1,5 +1,8 @@
 package be.bigdata.workshops.p2.storm;
 
+import be.bigdata.workshops.p2.storm.execution.strategy.ExecutionStrategy;
+import be.bigdata.workshops.p2.storm.execution.strategy.GenericExecutionStrategy;
+import be.bigdata.workshops.p2.storm.execution.strategy.InfiniteExecutionStrategy;
 import be.bigdata.workshops.p2.storm.topology.strategy.PlainTopologyStrategy;
 import be.bigdata.workshops.p2.storm.factories.BasicAuthSpoutFactory;
 import be.bigdata.workshops.p2.storm.factories.OAuthSpoutFactory;
@@ -51,6 +54,9 @@ public class Topology {
         final Subparser basicParser = realTimeSubparsers.addParser("basic").setDefault(FACTORY, BASIC_AUTH_SPOUT_FACTORY);
 
         parser.addArgument("-d", "--debug").help("Enable the debug bolt").action(Arguments.storeTrue()).setDefault(false);
+        parser.addArgument("-t", "--time").help("Amount of seconds to run. Choose a negative number to run infinitely.").type(Integer.class).setDefault(30);
+        ArgumentGroup sentimentGroup = parser.addArgumentGroup("Sentiment Analysis");
+        sentimentGroup.addArgument("--sentiment_file").help("Sentiment file").setDefault("sentiment_scores.txt");
 
         oauthParser.addArgument("-a", "--accessToken").required(true);
         oauthParser.addArgument("-s", "--accessTokenSecret").required(true);
@@ -84,29 +90,21 @@ public class Topology {
 
             final StormTopology topology = topologyStrategy.build(twitterSpout);
 
-            // TODO: make configurable
-            conf.put("sentiment_file", "sentiment_scores.txt");
-            executeTopology(topology, conf);
+            final String sentimentFile = namespace.getString("sentiment_file");
+            conf.put("sentiment_file", sentimentFile);
+            final int duration = namespace.getInt("time");
+            final ExecutionStrategy executionStrategy;
+            if (duration < 0) {
+                executionStrategy = new InfiniteExecutionStrategy();
+            } else {
+                executionStrategy = new GenericExecutionStrategy(duration);
+            }
+            executionStrategy.execute(topology, conf);
         } catch (final ArgumentParserException e) {
             parser.handleError(e);
             System.exit(1);
         } catch (final Exception ex) {
             throw new RuntimeException("error while running topology", ex);
         }
-    }
-
-    /**
-     * Run the given topology.
-     * 
-     * @param topology to run.
-     */
-    /* package */static void executeTopology(final StormTopology topology, final Config conf) {
-        final LocalCluster cluster = new LocalCluster();
-        cluster.submitTopology("twitter-test", conf, topology);
-
-        // Sleep XX seconds, then kill this clusters - closing the connections etc...
-        Utils.sleep(30000);
-        cluster.killTopology("twitter-test");
-        cluster.shutdown();
     }
 }
