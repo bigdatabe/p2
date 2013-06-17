@@ -1,3 +1,8 @@
 .idea
 *.iml
 target/
+p2-storm/topology/src/main/python/bin
+p2-storm/topology/src/main/python/include
+p2-storm/topology/src/main/python/lib
+p2-storm/topology/src/main/python/local
+*~
