@@ -11,3 +11,6 @@ You can run the worker with Vagrant, using:
 ``vagrant up web``
 
 
+## Issues
+
+1. http://stackoverflow.com/questions/17729757/preferred-fallback-network-interfaces-with-vagrant
