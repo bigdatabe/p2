@@ -2,6 +2,7 @@
 
 ## Usage
 
+0. Install ``Virtual Box``: https://www.virtualbox.org/wiki/Downloads
 1. Install ``Vagrant``: http://docs.vagrantup.com/v2/installation/index.html
 2. Run ``git submodule update --init`` in the root of the Git project.
 
