@@ -3,9 +3,8 @@ package be.bigdata.workshops.p2.storm;
 import backtype.storm.Config;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import twitter4j.*;
 import twitter4j.conf.ConfigurationBuilder;
-import twitter4j.TwitterStream;
-import twitter4j.TwitterStreamFactory;
 import backtype.storm.spout.SpoutOutputCollector;
 import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.OutputFieldsDeclarer;
@@ -17,10 +16,6 @@ import backtype.storm.utils.Utils;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import twitter4j.StallWarning;
-import twitter4j.Status;
-import twitter4j.StatusDeletionNotice;
-import twitter4j.StatusListener;
 import twitter4j.json.DataObjectFactory;
 
 public class TwitterOAuthSpout extends BaseRichSpout {
@@ -89,9 +84,17 @@ public class TwitterOAuthSpout extends BaseRichSpout {
         TwitterStreamFactory fact = new TwitterStreamFactory(
                 b.build());
 
+        // See http://twitter4j.org/oldjavadocs/3.0.3/twitter4j/FilterQuery.html
+        FilterQuery filterQuery = new FilterQuery();
+        String [] keywords = {"$AAPL", "$GOOG", "$CA", "$INFA", "$IBM", "$ORCL", "$HPQ", "$MSFT", "$YHOO", "$CSCO", "$AMD", "$INTL"};
+        filterQuery.track(keywords);
+
         _twitterStream = fact.getInstance();
         _twitterStream.addListener(listener);
         _twitterStream.sample();
+
+        // Use the filter function to get filtered results (instead of sample)
+        // _twitterStream.filter(filterQuery);
     }
 
     @Override
