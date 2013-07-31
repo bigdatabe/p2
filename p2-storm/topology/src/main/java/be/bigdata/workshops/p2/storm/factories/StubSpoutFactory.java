@@ -2,7 +2,7 @@ package be.bigdata.workshops.p2.storm.factories;
 
 import backtype.storm.Config;
 import backtype.storm.topology.IRichSpout;
-import be.bigdata.workshops.p2.storm.ApiStreamingSpoutStub;
+import be.bigdata.workshops.p2.storm.spout.ApiStreamingSpoutStub;
 import net.sourceforge.argparse4j.inf.Namespace;
 import org.apache.log4j.Logger;
 
@@ -14,9 +14,10 @@ import java.io.File;
  * Time: 1:51 PM
  */
 public class StubSpoutFactory implements SpoutFactory {
+//public class StubSpoutFactory implements SpoutFactory {
     private static final Logger LOG = Logger.getLogger(OAuthSpoutFactory.class);
 
-    @Override
+//    @Override
     public IRichSpout create(Namespace namespace, Config conf) {
         final File file = (File) namespace.get("file");
         conf.put("file", file.getAbsolutePath());

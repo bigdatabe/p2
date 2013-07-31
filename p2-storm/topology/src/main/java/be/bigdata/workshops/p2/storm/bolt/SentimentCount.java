@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package be.bigdata.workshops.p2.storm;
+package be.bigdata.workshops.p2.storm.bolt;
 
 
 /**

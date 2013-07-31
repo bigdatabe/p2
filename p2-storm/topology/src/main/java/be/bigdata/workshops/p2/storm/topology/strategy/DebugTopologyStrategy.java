@@ -3,8 +3,8 @@ package be.bigdata.workshops.p2.storm.topology.strategy;
 import backtype.storm.generated.StormTopology;
 import backtype.storm.topology.IRichSpout;
 import backtype.storm.topology.TopologyBuilder;
-import be.bigdata.workshops.p2.storm.DebugBolt;
-import be.bigdata.workshops.p2.storm.SentimentBolt;
+import be.bigdata.workshops.p2.storm.bolt.DebugBolt;
+import be.bigdata.workshops.p2.storm.bolt.SentimentBolt;
 
 /**
  * User: jens

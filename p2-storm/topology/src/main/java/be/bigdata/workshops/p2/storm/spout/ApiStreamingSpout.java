@@ -1,4 +1,4 @@
-package be.bigdata.workshops.p2.storm;
+package be.bigdata.workshops.p2.storm.spout;
 
 import java.io.BufferedReader;
 import java.io.IOException;

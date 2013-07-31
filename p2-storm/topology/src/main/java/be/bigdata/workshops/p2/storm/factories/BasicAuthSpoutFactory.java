@@ -2,7 +2,7 @@ package be.bigdata.workshops.p2.storm.factories;
 
 import backtype.storm.Config;
 import backtype.storm.topology.IRichSpout;
-import be.bigdata.workshops.p2.storm.ApiStreamingSpout;
+import be.bigdata.workshops.p2.storm.spout.ApiStreamingSpout;
 import net.sourceforge.argparse4j.inf.Namespace;
 import org.apache.log4j.Logger;
 

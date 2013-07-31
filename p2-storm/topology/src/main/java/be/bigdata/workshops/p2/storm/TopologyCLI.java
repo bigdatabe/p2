@@ -3,7 +3,7 @@ package be.bigdata.workshops.p2.storm;
 import be.bigdata.workshops.p2.storm.execution.strategy.ExecutionStrategy;
 import be.bigdata.workshops.p2.storm.execution.strategy.GenericExecutionStrategy;
 import be.bigdata.workshops.p2.storm.execution.strategy.InfiniteExecutionStrategy;
-import be.bigdata.workshops.p2.storm.topology.strategy.PlainTopologyStrategy;
+import be.bigdata.workshops.p2.storm.bolt.PlainTopologyStrategy;
 import be.bigdata.workshops.p2.storm.factories.BasicAuthSpoutFactory;
 import be.bigdata.workshops.p2.storm.factories.OAuthSpoutFactory;
 import be.bigdata.workshops.p2.storm.factories.SpoutFactory;
@@ -17,10 +17,8 @@ import net.sourceforge.argparse4j.inf.*;
 import org.apache.log4j.Logger;
 
 import backtype.storm.Config;
-import backtype.storm.LocalCluster;
 import backtype.storm.generated.StormTopology;
 import backtype.storm.topology.IRichSpout;
-import backtype.storm.utils.Utils;
 
 /**
  * Switch between different 'origin' spouts on the command line. To use real-time data using your Twitter username and
@@ -31,11 +29,11 @@ import backtype.storm.utils.Utils;
  *
  * Note that track filtering only works with basic authentication for now!
  *
- * @see https://github.com/storm-book/examples-ch04-spouts/blob/master/src/main/java/twitter/streaming/Topology.java for the
+ * @see https://github.com/storm-book/examples-ch04-spouts/blob/master/src/main/java/twitter/streaming/TopologyCLI.java for the
  *      original version.
  */
-public class Topology {
-    private static final Logger LOG = Logger.getLogger(Topology.class);
+public class TopologyCLI {
+    private static final Logger LOG = Logger.getLogger(TopologyCLI.class);
 
     private static final StubSpoutFactory STUB_SPOUT_FACTORY = new StubSpoutFactory();
     private static final OAuthSpoutFactory OAUTH_SPOUT_FACTORY = new OAuthSpoutFactory();

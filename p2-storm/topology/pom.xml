@@ -25,7 +25,7 @@
                 </descriptors>
                 <archive>
                     <manifest>
-                        <mainClass>be.bigdata.workshops.p2.storm.be.bigdata.workshops.p2.storm.Topology</mainClass>
+                        <mainClass>be.bigdata.workshops.p2.storm.be.bigdata.workshops.p2.storm.TopologyCLI</mainClass>
                     </manifest>
                 </archive>
             </configuration>

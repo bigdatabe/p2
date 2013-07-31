@@ -1,4 +1,4 @@
-package be.bigdata.workshops.p2.storm;
+package be.bigdata.workshops.p2.storm.bolt;
 
 import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.BasicOutputCollector;
@@ -7,17 +7,15 @@ import backtype.storm.topology.base.BaseBasicBolt;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
+import com.google.common.base.Splitter;
+import org.apache.log4j.Logger;
+import org.json.simple.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.StringTokenizer;
-
-import org.apache.log4j.Logger;
-import org.json.simple.JSONObject;
-
-import com.google.common.base.Splitter;
 
 /**
  * Bolt that processes incoming tweets, performs some basic sentiment analysis 

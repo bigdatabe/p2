@@ -1,4 +1,4 @@
-package be.bigdata.workshops.p2.storm;
+package be.bigdata.workshops.p2.storm.bolt;
 
 import java.util.HashMap;
 import java.util.Map;
