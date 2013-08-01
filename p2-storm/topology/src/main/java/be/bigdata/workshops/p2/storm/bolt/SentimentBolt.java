@@ -9,7 +9,6 @@ import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 import com.google.common.base.Splitter;
 import org.apache.log4j.Logger;
-import org.json.simple.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -18,11 +17,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Bolt that processes incoming tweets, performs some basic sentiment analysis 
- * on the tweet text, and emits the tracking keyword, the original tweet and a 
+ * Bolt that processes incoming tweets, performs some basic sentiment analysis
+ * on the tweet text, and emits the tracking keyword, the original tweet and a
  * basic sentiment (String value "+" or "-") to the output collector for further
  * processing.
- * 
+ *
  * @author Olivier Van Laere <oliviervanlaere@gmail.com>
  */
 public class SentimentBolt extends BaseBasicBolt{
@@ -37,19 +36,19 @@ public class SentimentBolt extends BaseBasicBolt{
   /**
    * Constant for the positive sentiment
    */
-  public static final String SENTIMENT_POSITIVE = "+";
-  
+  public static final Double SENTIMENT_POSITIVE = +1.0;
+
   /**
    * Constant for the negative sentiment
    */
-  public static String SENTIMENT_NEGATIVE = "-";
+  public static final Double SENTIMENT_NEGATIVE = -1.0;
 
   /**
    * Constant for the neutral sentiment - just for debugging purpose
    */
-  public static String SENTIMENT_NEUTRAL = "o";
+  public static final Double SENTIMENT_NEUTRAL = 0.0;
 
-  
+
   /**
    * Map holding some word-score pairs for sentiment analysis.
    */
@@ -59,39 +58,34 @@ public class SentimentBolt extends BaseBasicBolt{
    * Logger.
    */
   private static Logger LOG = Logger.getLogger(SentimentBolt.class);
-  
+
   /**
    * Actual bolt processing code.
    * @param input Input Tuple from a Spout.
-   * @param collector The outputcollector that collects the output of this 
+   * @param collector The outputcollector that collects the output of this
    * calculation.
    */
   @Override
   public void execute(Tuple input, BasicOutputCollector collector) {
     // Fetch the tracking keyword from the input tuple
     String track = (String)input.getValueByField("track");
-    // Fetch the JSON data embedded in the "tweet" field in the input tuple
-    JSONObject json = (JSONObject)input.getValueByField("tweet");
-    // If there is a JSON field text - just sanity checking
-    if(json.containsKey("text")){
-      // Fetch the tweet text
-      String tweetText = (String)json.get("text");
-      // Convert it to lowercase - the sentiment words are all lowercase
-      int score = scoreSentiment(tweetText.toLowerCase());
-        // Init the actual sentiment for this tweet
-        String sentiment = SENTIMENT_NEUTRAL;
-        if (score > 0)
-          sentiment = SENTIMENT_POSITIVE;
-        else if (score < 0)
-          sentiment = SENTIMENT_NEGATIVE;
-        // If there was a non-neutral
-        if (!sentiment.equals(SENTIMENT_NEUTRAL)) {
-          // Emit data to the output collector for the next processing phase
-          collector.emit(new Values(track, tweetText, sentiment));
-        }
+    // Fetch the tweet text embedded in the "tweet" field in the input tuple
+    String tweetText = (String)input.getValueByField("tweet");
+    // Convert it to lowercase - the sentiment words are all lowercase
+    int score = scoreSentiment(tweetText.toLowerCase());
+      // Init the actual sentiment for this tweet
+      Double sentiment = SENTIMENT_NEUTRAL;
+      if (score > 0)
+        sentiment = SENTIMENT_POSITIVE;
+      else if (score < 0)
+        sentiment = SENTIMENT_NEGATIVE;
+      // If there was a non-neutral
+      if (!sentiment.equals(SENTIMENT_NEUTRAL)) {
+        // Emit data to the output collector for the next processing phase
+        collector.emit(new Values(track, tweetText, sentiment));
+      }
         // Debug info
-//        System.out.println(sentiment + " " + tweetText);
-    }
+      System.out.println("SENTIMENT" + sentiment + " " + tweetText);
   }
 
   /* package */ int scoreSentiment(String text) {
@@ -105,10 +99,10 @@ public class SentimentBolt extends BaseBasicBolt{
           score += sentiment_scores.get(word);
         }
       }
-      
+
       return score;
   }
-  
+
   /**
    * Bolt preparation.
    */
@@ -117,7 +111,7 @@ public class SentimentBolt extends BaseBasicBolt{
     // Fetch the URI for the sentiment file
     String sentimentFile = ((String) stormConf.get(SENTIMENT_FILE));
     // Normally this should go via classloading/jarloading/resources?
-    
+
     // Init the reader
     BufferedReader file = null;
     try {
@@ -149,18 +143,18 @@ public class SentimentBolt extends BaseBasicBolt{
         LOG.error("Dying over here...");
       }
     }
-    LOG.debug("Sentiment words loaded: " + sentiment_scores.size());
+    LOG.info("Sentiment words loaded: " + sentiment_scores.size());
   }
 
   /**
    * Declare the output fields of this bolt.
-   * @param declarer 
+   * @param declarer
    */
   @Override
   public void declareOutputFields(OutputFieldsDeclarer declarer) {
     declarer.declare(new Fields("track", "tweet", "sentiment"));
   }
-  
+
   @Override
   public void cleanup() {
     // Not implemented.
