@@ -17,7 +17,7 @@ public class DebugTopologyStrategy implements TopologyStrategy {
         final TopologyBuilder builder = new TopologyBuilder();
         builder.setSpout("tweets-collector", twitterSpout, 1);
         builder.setBolt("sentiment-analyzer", new SentimentBolt()).shuffleGrouping("tweets-collector");
-        builder.setBolt("debug", new DebugBolt()).shuffleGrouping("tweets-collector");
+        builder.setBolt("debug", new DebugBolt()).shuffleGrouping("sentiment-analyzer");
         return builder.createTopology();
     }
 }
