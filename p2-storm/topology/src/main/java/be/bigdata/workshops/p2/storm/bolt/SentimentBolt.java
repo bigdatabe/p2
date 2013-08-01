@@ -85,7 +85,7 @@ public class SentimentBolt extends BaseBasicBolt{
         collector.emit(new Values(track, tweetText, sentiment));
       }
         // Debug info
-//        System.out.println(sentiment + " " + tweetText);
+      System.out.println("SENTIMENT" + sentiment + " " + tweetText);
   }
 
   /* package */ int scoreSentiment(String text) {
@@ -143,7 +143,7 @@ public class SentimentBolt extends BaseBasicBolt{
         LOG.error("Dying over here...");
       }
     }
-    LOG.debug("Sentiment words loaded: " + sentiment_scores.size());
+    LOG.info("Sentiment words loaded: " + sentiment_scores.size());
   }
 
   /**
