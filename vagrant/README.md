@@ -11,7 +11,7 @@ The credentials are: ``vagrant``/``vagrant``.
 ### Worker
 
 You can run the worker with Vagrant, using:
-``vagrant up worker``
+``vagrant up web``
 
 
 ## Issues
