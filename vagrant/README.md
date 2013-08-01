@@ -9,7 +9,7 @@
 ### Worker
 
 You can run the worker with Vagrant, using:
-``vagrant up web``
+``vagrant up worker``
 
 
 ## Issues
