@@ -10,7 +10,8 @@ The credentials are: ``vagrant``/``vagrant``.
 
 ### Worker
 
-You can run the worker with Vagrant, using:
+0. go to the following directory : ''p2/vagrant'
+1. You can run the worker with Vagrant, using:
 ``vagrant up web``
 
 
