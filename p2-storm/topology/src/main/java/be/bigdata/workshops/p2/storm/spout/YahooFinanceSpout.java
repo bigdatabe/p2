@@ -14,7 +14,11 @@ import org.apache.log4j.Logger;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 import java.util.Random;
 
@@ -65,15 +69,23 @@ public class YahooFinanceSpout extends BaseRichSpout {
             String[] lSplit = response.split(",");
             String stockName = lSplit[0];
             double stockPrice = Double.parseDouble(lSplit[1]);
+            
             String date = lSplit[2];
             String time = lSplit[3];
+            
+            SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy hh:mma");
+            Date parsedDate = df.parse(date  + " "  + time);
+            
+            System.out.println(df.format(parsedDate));
 
-            outputCollector.emit(new Values(stockName, stockPrice, date, time));
+            outputCollector.emit(new Values(stockName, stockPrice, parsedDate));
         } catch (MalformedURLException e) {
             logger.error(e.getMessage(), e);
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
-        }
+        } catch (ParseException e) {
+        	logger.error(e.getMessage(), e);
+		}
     }
 
 
@@ -87,7 +99,7 @@ public class YahooFinanceSpout extends BaseRichSpout {
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields("stock", "value", "date", "time"));
+        declarer.declare(new Fields("stock", "value", "date"));
     }
 
 }

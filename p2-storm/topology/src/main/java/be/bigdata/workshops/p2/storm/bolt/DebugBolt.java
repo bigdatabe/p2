@@ -18,6 +18,7 @@ import backtype.storm.tuple.Tuple;
 public class DebugBolt extends BaseRichBolt {
     private static final long serialVersionUID = 1037052250323137715L;
     private static Logger LOGGER = Logger.getLogger(DebugBolt.class);
+    private OutputCollector coll ; 
 
     @Override
     public void prepare(final Map stormConf, final TopologyContext context, final OutputCollector collector) {
