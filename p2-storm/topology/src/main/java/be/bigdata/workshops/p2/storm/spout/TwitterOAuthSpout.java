@@ -28,6 +28,8 @@ public class TwitterOAuthSpout extends BaseRichSpout {
     LinkedBlockingQueue<Object> queue = null;
     TwitterStream _twitterStream;
 
+    String [] keywords = {"$AAPL", "$GOOG", "$CA", "$INFA", "$IBM", "$ORCL", "$HPQ", "$MSFT", "$YHOO", "$CSCO", "$AMD", "$INTL"};
+
     @Override
     public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
         queue = new LinkedBlockingQueue<Object>(1000);
@@ -36,14 +38,7 @@ public class TwitterOAuthSpout extends BaseRichSpout {
             @Override
             public void onStatus(Status status) {
                 // Dirty, but this is what we need to be compatible with ApiStreamingSpout
-                String rawJson = DataObjectFactory.getRawJSON(status);
-                Object json;
-                try {
-                    json = jsonParser.parse(rawJson);
-                    queue.offer(json);
-                } catch (ParseException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                }
+                queue.offer(status.getText());
             }
 
             @Override
@@ -86,24 +81,27 @@ public class TwitterOAuthSpout extends BaseRichSpout {
 
         // See http://twitter4j.org/oldjavadocs/3.0.3/twitter4j/FilterQuery.html
         FilterQuery filterQuery = new FilterQuery();
-        String [] keywords = {"$AAPL", "$GOOG", "$CA", "$INFA", "$IBM", "$ORCL", "$HPQ", "$MSFT", "$YHOO", "$CSCO", "$AMD", "$INTL"};
         filterQuery.track(keywords);
 
         _twitterStream = fact.getInstance();
         _twitterStream.addListener(listener);
-        _twitterStream.sample();
 
+        //_twitterStream.sample();
         // Use the filter function to get filtered results (instead of sample)
-        // _twitterStream.filter(filterQuery);
+         _twitterStream.filter(filterQuery);
     }
 
     @Override
     public void nextTuple() {
-        Object ret = queue.poll();
+        String ret = (String)queue.poll();
         if (ret == null) {
             Utils.sleep(50);
         } else {
-            _collector.emit(new Values("*", ret));
+            for (String s: keywords) {
+                if (ret.contains(s)) {
+                    _collector.emit(new Values(s, ret));
+                }
+            }
         }
     }
 
