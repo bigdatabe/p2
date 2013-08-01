@@ -39,3 +39,33 @@ class { 'storm::nimbus':
     require     => Class['cdh4::zookeeper::server']
 }
 class { 'storm::ui': }
+
+class { 'site_redis':
+    require => Package['epel-release'],
+}
+
+package { 'epel-release' :
+    ensure      => installed,
+    provider    => rpm,
+    source      => 'http://fedora.cu.be/epel/6/i386/epel-release-6-8.noarch.rpm'
+}
+
+package { 'remi-release' :
+    ensure      => installed,
+    provider    => rpm,
+    source      => 'http://rpms.famillecollet.com/enterprise/remi-release-6.rpm'
+}
+
+yumrepo {'epel':
+    enabled => 1,
+    require => Package['epel-release']
+}
+
+yumrepo {'remi':
+    enabled     => 1,
+    mirrorlist  => 'http://rpms.famillecollet.com/enterprise/$releasever/remi/mirror',
+    descr       => 'Remi',
+    gpgcheck    => 1,
+    gpgkey      => 'http://rpms.famillecollet.com/RPM-GPG-KEY-remi',
+    require     => Package['remi-release']
+}
