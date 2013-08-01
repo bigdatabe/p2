@@ -36,17 +36,17 @@ public class SentimentBolt extends BaseBasicBolt{
   /**
    * Constant for the positive sentiment
    */
-  public static final String SENTIMENT_POSITIVE = "+";
+  public static final Double SENTIMENT_POSITIVE = +1.0;
 
   /**
    * Constant for the negative sentiment
    */
-  public static String SENTIMENT_NEGATIVE = "-";
+  public static final Double SENTIMENT_NEGATIVE = -1.0;
 
   /**
    * Constant for the neutral sentiment - just for debugging purpose
    */
-  public static String SENTIMENT_NEUTRAL = "o";
+  public static final Double SENTIMENT_NEUTRAL = 0.0;
 
 
   /**
@@ -74,7 +74,7 @@ public class SentimentBolt extends BaseBasicBolt{
     // Convert it to lowercase - the sentiment words are all lowercase
     int score = scoreSentiment(tweetText.toLowerCase());
       // Init the actual sentiment for this tweet
-      String sentiment = SENTIMENT_NEUTRAL;
+      Double sentiment = SENTIMENT_NEUTRAL;
       if (score > 0)
         sentiment = SENTIMENT_POSITIVE;
       else if (score < 0)
