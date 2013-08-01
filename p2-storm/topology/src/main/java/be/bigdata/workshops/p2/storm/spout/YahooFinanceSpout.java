@@ -75,8 +75,7 @@ public class YahooFinanceSpout extends BaseRichSpout {
             
             SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy hh:mma");
             Date parsedDate = df.parse(date  + " "  + time);
-            
-            System.out.println(df.format(parsedDate));
+            parsedDate = new Date();
 
             outputCollector.emit(new Values(stockName, stockPrice, parsedDate));
         } catch (MalformedURLException e) {

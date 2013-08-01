@@ -40,6 +40,7 @@ public class FinanceTrendBolt extends BaseRichBolt {
 			trendComputers.put(stockName, new TrendComputer(financeWindowSize));
 		}
 		
+		
 		trendComputers.get(stockName).addData(stockPrice, date);
 		
 		for (TrendComputer computer : trendComputers.values()) {
@@ -56,19 +57,6 @@ public class FinanceTrendBolt extends BaseRichBolt {
 		declarer.declare(new Fields("stockName", "trend", "startTime", "endTime"));
 
 	}
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-	}
-	
-	 public static boolean isTickTuple(Tuple tuple) {
-	        return tuple.getSourceComponent().equals(Constants.SYSTEM_COMPONENT_ID)
-	            && tuple.getSourceStreamId().equals(Constants.SYSTEM_TICK_STREAM_ID);
-	    }
 
 
 }

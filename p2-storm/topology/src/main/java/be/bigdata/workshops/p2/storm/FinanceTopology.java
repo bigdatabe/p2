@@ -40,7 +40,7 @@ public class FinanceTopology {
             LocalCluster cluster = new LocalCluster();
             cluster.submitTopology("finance-stream", conf, builder.createTopology());
 
-            Thread.sleep(10000);
+            Thread.sleep(20000);
 
             cluster.shutdown();
         }
