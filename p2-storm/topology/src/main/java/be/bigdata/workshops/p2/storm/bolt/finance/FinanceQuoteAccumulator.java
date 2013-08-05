@@ -38,7 +38,9 @@ public class FinanceQuoteAccumulator implements IFinanceQuoteAccumulator {
 	@Override
 	public FinanceTrend getTrend() {
 		if (isTrendReady()) {
-			return trendComputer.computeTrend(timedValues);
+			final FinanceTrend trend = trendComputer.computeTrend(timedValues);
+			timedValues.clear();
+			return trend;
 		} else {
 			return null;
 		}
@@ -58,8 +60,6 @@ public class FinanceQuoteAccumulator implements IFinanceQuoteAccumulator {
 		
 		return last.date.getTime() - first.date.getTime() >= financeWindowSize;
 	}
-
-		
 
 	
 }
