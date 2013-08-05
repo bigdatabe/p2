@@ -6,7 +6,7 @@ import backtype.storm.StormSubmitter;
 import backtype.storm.topology.TopologyBuilder;
 import backtype.storm.tuple.Fields;
 import be.bigdata.workshops.p2.storm.bolt.DebugBolt;
-import be.bigdata.workshops.p2.storm.bolt.FinanceTrendBolt;
+import be.bigdata.workshops.p2.storm.bolt.finance.FinanceTrendBolt;
 import be.bigdata.workshops.p2.storm.spout.YahooFinanceSpout;
 
 

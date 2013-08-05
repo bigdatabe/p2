@@ -1,30 +1,18 @@
-package be.bigdata.workshops.p2.storm.bolt;
+package be.bigdata.workshops.p2.storm.bolt.finance;
 
 import java.util.Date;
 
-public class Trend {
+public class FinanceTrend {
 
 	private Date startTime;
 	private Date endTime;
 	private Integer trend;
 
-	public Trend() {
-		// TODO Auto-generated constructor stub
-	}
-
-	public Trend(Date startTime, Date endTime, Integer trend) {
+	public FinanceTrend(Date startTime, Date endTime, Integer trend) {
 		super();
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.trend = trend;
-	}
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
 	}
 
 	public Date getStartTime() {
