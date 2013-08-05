@@ -12,7 +12,7 @@ The credentials are: ``vagrant``/``vagrant``.
 
 0. go to the following directory : ''p2/vagrant'
 1. You can run the worker with Vagrant, using:
-``vagrant up web``
+``vagrant up worker``
 
 
 ## Issues
