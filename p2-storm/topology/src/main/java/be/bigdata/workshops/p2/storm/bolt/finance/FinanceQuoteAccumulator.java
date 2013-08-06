@@ -54,11 +54,17 @@ public class FinanceQuoteAccumulator implements IFinanceQuoteAccumulator {
 		if (timedValues.size() < 2) {
 			return false;
 		}
-		// TODO: this assumes the list of values is always sorted, but we actually sort it nowwhere => depends on the spout => fix that
-		TimedValue first = timedValues.get(0);
-		TimedValue last = timedValues.get(timedValues.size()-1);
 		
-		return last.date.getTime() - first.date.getTime() >= financeWindowSize;
+		// TODO: this assumes the list of values is always sorted, but we actually sort it nowwhere => depends on the spout => fix that
+		Date firstDate = timedValues.get(0).date;
+		Date lastDate = timedValues.get(timedValues.size()-1).date;
+		
+		Date now = new Date();
+		if (now.after(lastDate)){
+			lastDate = now;
+		}
+		
+		return lastDate.getTime() - firstDate.getTime() >= financeWindowSize;
 	}
 
 	

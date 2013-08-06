@@ -1,5 +1,8 @@
 package be.bigdata.workshops.p2.storm.bolt.finance;
 
+import static be.bigdata.workshops.p2.storm.FinanceTopology.FINANCE_AGGREGATION_PERIOD_PARAM;
+import static be.bigdata.workshops.p2.storm.Utils.isTickTuple;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +18,8 @@ import be.bigdata.workshops.p2.storm.bolt.SimpleFirstLastTrendComputer;
 
 public class FinanceTrendBolt extends BaseRichBolt {
 
+	private static final long serialVersionUID = 1L;
+	
 	private OutputCollector collector;
 	private Long financeWindowSize;
 
@@ -23,24 +28,27 @@ public class FinanceTrendBolt extends BaseRichBolt {
 	@Override
 	public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
 		this.collector = collector;
-		financeWindowSize = (Long) stormConf.get("finance.window.size");
+		financeWindowSize = (Long) stormConf.get(FINANCE_AGGREGATION_PERIOD_PARAM);
 	}
 
 	@Override
-	public void execute(Tuple input) {
+	public void execute(Tuple tuple) {
 
-		String stockName = (String) input.getValueByField("stock");
-		Double stockPrice = (Double) input.getValueByField("value");
-		Date date = (Date) input.getValueByField("date");
+		if (!isTickTuple(tuple)) {
+			String stockName = (String) tuple.getValueByField("stock");
+			Double stockPrice = (Double) tuple.getValueByField("value");
+			Date date = (Date) tuple.getValueByField("date");
+			
+			if (!trendComputers.containsKey(stockName)) {
+				trendComputers.put(stockName, new FinanceQuoteAccumulator(financeWindowSize, new SimpleFirstLastTrendComputer()));
+			}
+			
+			trendComputers.get(stockName).update(stockPrice, date);
+		} 
 
-		if (!trendComputers.containsKey(stockName)) {
-			trendComputers.put(stockName, new FinanceQuoteAccumulator(financeWindowSize, new SimpleFirstLastTrendComputer()));
-		}
-
-		trendComputers.get(stockName).update(stockPrice, date);
-
-		for (IFinanceQuoteAccumulator computer : trendComputers.values()) {
-			FinanceTrend trend = computer.getTrend();
+		// after each quote and at each "tick": check if any aggregators has anything to say
+		for (String stockName : trendComputers.keySet()) {
+			FinanceTrend trend = trendComputers.get(stockName).getTrend();
 			if (trend != null) {
 				collector.emit(new Values(stockName, trend.getTrend(), trend.getStartTime(), trend.getEndTime()));
 			}
@@ -51,7 +59,6 @@ public class FinanceTrendBolt extends BaseRichBolt {
 	@Override
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
 		declarer.declare(new Fields("stockName", "trend", "startTime", "endTime"));
-
 	}
 
 }

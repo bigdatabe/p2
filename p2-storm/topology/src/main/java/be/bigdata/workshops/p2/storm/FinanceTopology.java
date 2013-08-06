@@ -12,6 +12,7 @@ import be.bigdata.workshops.p2.storm.spout.YahooFinanceSpout;
 
 public class FinanceTopology {
 
+	public static String FINANCE_AGGREGATION_PERIOD_PARAM = "finance.window.size";
 	
 
     public static void main(String[] args) throws Exception {
@@ -27,7 +28,8 @@ public class FinanceTopology {
         
         Config conf = new Config();
         conf.setDebug(true);
-        conf.put("finance.window.size", 2000l);
+        conf.put(FINANCE_AGGREGATION_PERIOD_PARAM, 2000l);
+        conf.put(Config.TOPOLOGY_TICK_TUPLE_FREQ_SECS,  1);
 
 
         if(args!=null && args.length > 0) {
