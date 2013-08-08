@@ -1,5 +1,18 @@
 package be.bigdata.workshops.p2.storm.spout;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Map;
+import java.util.Random;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
+
 import backtype.storm.spout.SpoutOutputCollector;
 import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.OutputFieldsDeclarer;
@@ -7,20 +20,8 @@ import backtype.storm.topology.base.BaseRichSpout;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Values;
 import backtype.storm.utils.Utils;
-import com.google.common.collect.Lists;
-import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Map;
-import java.util.Random;
+import com.google.common.collect.Lists;
 
 /**
  * This class imlements a Spout that polls yahoo finance
@@ -75,7 +76,10 @@ public class YahooFinanceSpout extends BaseRichSpout {
             
             SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy hh:mma");
             Date parsedDate = df.parse(date  + " "  + time);
-            parsedDate = new Date();
+            
+//			  fake values (handy when stock market is closed...)
+//            stockPrice = Math.random()*100;
+//            parsedDate = new Date();
 
             outputCollector.emit(new Values(stockName, stockPrice, parsedDate));
         } catch (MalformedURLException e) {

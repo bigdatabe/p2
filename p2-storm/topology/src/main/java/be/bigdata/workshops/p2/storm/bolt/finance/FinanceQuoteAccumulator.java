@@ -7,6 +7,8 @@ import java.util.List;
 import be.bigdata.workshops.p2.storm.bolt.TimedValue;
 
 /**
+ * @author svend
+ * 
  * Simple accumulator that just waits for at least "financeWindowSize" milliseconds of tuples, then triggers an aggregation and clear the memory => this one never remembers anything about history.
  * 
  *  WARNING: the whole accumulation is happening in memory, in this java instance : this is not yet based on the State mechanism of Storm!

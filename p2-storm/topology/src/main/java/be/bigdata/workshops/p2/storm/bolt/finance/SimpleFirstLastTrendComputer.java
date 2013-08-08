@@ -1,9 +1,8 @@
-package be.bigdata.workshops.p2.storm.bolt;
+package be.bigdata.workshops.p2.storm.bolt.finance;
 
 import java.util.List;
 
-import be.bigdata.workshops.p2.storm.bolt.finance.FinanceTrend;
-import be.bigdata.workshops.p2.storm.bolt.finance.IFinanceTrendComputer;
+import be.bigdata.workshops.p2.storm.bolt.TimedValue;
 
 /**
  * uber simplistic trend computer: just looks if the first is greater or smaller than the last... ^__

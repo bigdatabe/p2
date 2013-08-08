@@ -13,22 +13,18 @@ import be.bigdata.workshops.p2.storm.spout.YahooFinanceSpout;
 public class FinanceTopology {
 
 	public static String FINANCE_AGGREGATION_PERIOD_PARAM = "finance.window.size";
-	
 
     public static void main(String[] args) throws Exception {
 
-    	
-    	
         TopologyBuilder builder = new TopologyBuilder();
 
         builder.setSpout("spout", new YahooFinanceSpout(), 1);
-        builder
-        	.setBolt("financeTrend" , new FinanceTrendBolt()).fieldsGrouping("spout", new Fields("stock"));
+        builder.setBolt("financeTrend" , new FinanceTrendBolt()).fieldsGrouping("spout", new Fields("stock"));
         builder.setBolt("debug", new DebugBolt(), 12).shuffleGrouping("financeTrend");
         
         Config conf = new Config();
         conf.setDebug(true);
-        conf.put(FINANCE_AGGREGATION_PERIOD_PARAM, 2000l);
+        conf.put(FINANCE_AGGREGATION_PERIOD_PARAM, 5000l);
         conf.put(Config.TOPOLOGY_TICK_TUPLE_FREQ_SECS,  1);
 
 

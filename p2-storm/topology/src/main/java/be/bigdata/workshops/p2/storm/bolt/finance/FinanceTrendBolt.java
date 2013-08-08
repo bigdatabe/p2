@@ -14,8 +14,14 @@ import backtype.storm.topology.base.BaseRichBolt;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
-import be.bigdata.workshops.p2.storm.bolt.SimpleFirstLastTrendComputer;
 
+/**
+ * @author svend
+ * 
+ *         Aggregates quote values for each quote name and emit quote trends (not necessarily after each quote value, the exact aggregation
+ *         and trend emission policy is delegated to a set {@link IFinanceQuoteAccumulator} and {@link IFinanceTrendComputer}
+ * 
+ */
 public class FinanceTrendBolt extends BaseRichBolt {
 
 	private static final long serialVersionUID = 1L;
