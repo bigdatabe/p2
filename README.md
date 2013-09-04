@@ -12,4 +12,6 @@ running the topology just reshuffles the store.
 Functional analysis
 ===================
 
-* http://altf1be.wordpress.com/2013/06/14/designing-a-solution-using-real-time-stock-quotes-analytics-with-storm-twitter-yahoo-finance-bigdata-sentimentanalysis-ghent-belgium/
+* [DESIGNING A SOLUTION USING REAL TIME STOCK QUOTES ANALYTICS WITH STORM, TWITTER, YAHOO FINANCE](http://altf1be.wordpress.com/2013/06/14/designing-a-solution-using-real-time-stock-quotes-analytics-with-storm-twitter-yahoo-finance-bigdata-sentimentanalysis-ghent-belgium/)
+
+* [Techniques and Applications for Sentiment Analysis](http://cacm.acm.org/magazines/2013/4/162501-techniques-and-applications-for-sentiment-analysis/fulltext)
